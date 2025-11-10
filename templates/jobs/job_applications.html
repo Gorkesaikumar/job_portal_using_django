@@ -1,0 +1,433 @@
+{% extends 'base.html' %}
+
+{% block title %}Applications for {{ job.title }} - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .applications-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .header-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 32px;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    
+    .job-info h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 12px;
+    }
+    
+    .job-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.9375rem;
+        color: #64748b;
+    }
+    
+    .btn-back {
+        padding: 12px 24px;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #475569;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-back:hover {
+        background: #e2e8f0;
+        color: #334155;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+        animation: fadeInUp 0.8s ease 0.1s both;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    .applications-list {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        animation: fadeInUp 0.8s ease 0.2s both;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 24px;
+    }
+    
+    .application-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .application-card:hover {
+        border-color: var(--primary);
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .applicant-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+        gap: 20px;
+    }
+    
+    .applicant-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex: 1;
+    }
+    
+    .applicant-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    
+    .applicant-details h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 4px;
+    }
+    
+    .applicant-meta {
+        display: flex;
+        gap: 12px;
+        font-size: 0.875rem;
+        color: #64748b;
+        flex-wrap: wrap;
+    }
+    
+    .badge {
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+    
+    .badge-pending {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        color: #92400e;
+    }
+    
+    .badge-reviewed {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+    }
+    
+    .badge-accepted {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+    }
+    
+    .badge-rejected {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #991b1b;
+    }
+    
+    .cover-letter {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--primary);
+    }
+    
+    .cover-letter h4 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .cover-letter p {
+        color: #475569;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .application-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .status-form {
+        display: inline-block;
+    }
+    
+    .btn-status {
+        padding: 10px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-accept {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+    }
+    
+    .btn-accept:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-reject {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #991b1b;
+    }
+    
+    .btn-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-review {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+    }
+    
+    .btn-review:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state svg {
+        width: 80px;
+        height: 80px;
+        opacity: 0.3;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+        font-size: 0.9375rem;
+        color: #94a3b8;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+        }
+        
+        .applicant-header {
+            flex-direction: column;
+        }
+        
+        .application-actions {
+            width: 100%;
+        }
+        
+        .status-form {
+            flex: 1;
+        }
+        
+        .btn-status {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="applications-container">
+    <div class="header-card">
+        <div class="header-content">
+            <div class="job-info">
+                <h1>Applications for {{ job.title }}</h1>
+                <div class="job-meta">
+                    <span>📍 {{ job.location }}</span>
+                    <span>💼 {{ job.get_job_type_display }}</span>
+                    <span>📅 Posted {{ job.posted_date|date:"M d, Y" }}</span>
+                </div>
+            </div>
+            <a href="{% url 'employer_dashboard' %}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">{{ applications.count }}</div>
+            <div class="stat-label">Total Applications</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ applications|length }}</div>
+            <div class="stat-label">To Review</div>
+        </div>
+    </div>
+    
+    <div class="applications-list">
+        <h2 class="section-title">Applicant List</h2>
+        
+        {% if applications %}
+            {% for application in applications %}
+            <div class="application-card">
+                <div class="applicant-header">
+                    <div class="applicant-info">
+                        <div class="applicant-avatar">
+                            {{ application.jobseeker.full_name.0 }}
+                        </div>
+                        <div class="applicant-details">
+                            <h3>{{ application.jobseeker.full_name }}</h3>
+                            <div class="applicant-meta">
+                                <span>📧 {{ application.jobseeker.user.email }}</span>
+                                <span>📞 {{ application.jobseeker.phone }}</span>
+                                <span>📅 Applied {{ application.applied_date|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="badge badge-{{ application.status }}">{{ application.get_status_display }}</span>
+                </div>
+                
+                <div class="cover-letter">
+                    <h4>Cover Letter</h4>
+                    <p>{{ application.cover_letter }}</p>
+                </div>
+                
+                {% if application.jobseeker.resume %}
+                <div style="margin-bottom: 20px;">
+                    <a href="{{ application.jobseeker.resume.url }}" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+                        📄 Download Resume
+                    </a>
+                </div>
+                {% endif %}
+                
+                <div class="application-actions">
+                    <form method="post" action="{% url 'update_application_status' application.id %}" class="status-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="accepted">
+                        <button type="submit" class="btn-status btn-accept">✓ Accept</button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'update_application_status' application.id %}" class="status-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="reviewed">
+                        <button type="submit" class="btn-status btn-review">👁 Mark as Reviewed</button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'update_application_status' application.id %}" class="status-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="rejected">
+                        <button type="submit" class="btn-status btn-reject">✗ Reject</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 12H15M9 16H15M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H12.586C12.8512 3.00006 13.1055 3.10545 13.293 3.293L18.707 8.707C18.8946 8.89449 18.9999 9.1488 19 9.414V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3>No applications yet</h3>
+                <p>Applications will appear here once job seekers start applying</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

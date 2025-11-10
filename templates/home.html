@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 80px 20px;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+    }
+    
+    .hero-section p {
+        font-size: 1.25rem;
+        color: #64748b;
+        margin-bottom: 40px;
+    }
+    
+    .hero-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .hero-btn {
+        padding: 16px 40px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .btn-gradient {
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+    }
+    
+    .btn-outline {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+    
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin: 60px 0;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: #64748b;
+        margin-top: 8px;
+    }
+    
+    .jobs-section {
+        margin: 60px 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #1e293b;
+    }
+    
+    .job-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .job-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    
+    .job-company {
+        color: var(--primary);
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+    
+    .job-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 16px;
+    }
+    
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hero-btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Find Your Dream Job</h1>
+    <p>Connect with top employers and discover opportunities that match your skills</p>
+    <div class="hero-buttons">
+        <a href="{% url 'job_list' %}" class="hero-btn btn-gradient">Browse Jobs</a>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'select_user_type' %}" class="hero-btn btn-outline">Get Started</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="stats-section">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_jobs }}</div>
+        <div class="stat-label">Active Jobs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Companies</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">10K+</div>
+        <div class="stat-label">Job Seekers</div>
+    </div>
+</div>
+
+{% if recent_jobs %}
+<div class="jobs-section">
+    <h2 class="section-title">Recent Job Openings</h2>
+    <div class="row">
+        {% for job in recent_jobs %}
+        <div class="col-md-6">
+            <div class="job-card">
+                <h3 class="job-title">{{ job.title }}</h3>
+                <div class="job-company">{{ job.employer.company_name }}</div>
+                <div class="job-meta">
+                    <span>📍 {{ job.location }}</span>
+                    <span>💼 {{ job.get_job_type_display }}</span>
+                    {% if job.salary_min %}
+                    <span>💰 ${{ job.salary_min }} - ${{ job.salary_max }}</span>
+                    {% endif %}
+                </div>
+                <a href="{% url 'job_detail' job.id %}" class="btn btn-primary btn-sm">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'job_list' %}" class="btn btn-primary">View All Jobs</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Seeker Registration - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-container {
+        max-width: 700px;
+        margin: 60px auto;
+        padding: 20px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .register-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .register-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+    }
+    
+    .register-subtitle {
+        font-size: 1.0625rem;
+        color: #64748b;
+    }
+    
+    .register-card {
+        background: white;
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 20px 60px rgba(240, 147, 251, 0.15);
+        border: 1px solid rgba(240, 147, 251, 0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        letter-spacing: 0.3px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #1e293b;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #f5576c;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(245, 87, 108, 0.1);
+        outline: none;
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .form-text {
+        font-size: 0.8125rem;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(245, 87, 108, 0.3);
+        margin-top: 8px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
+    }
+    
+    .login-link {
+        text-align: center;
+        margin-top: 24px;
+        color: #64748b;
+    }
+    
+    .login-link a {
+        color: #f5576c;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0 0;
+    }
+    
+    .errorlist li {
+        color: #dc2626;
+        font-size: 0.875rem;
+        padding: 8px 12px;
+        background: #fee2e2;
+        border-radius: 8px;
+        margin-top: 4px;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .register-card {
+            padding: 32px 24px;
+        }
+        
+        .register-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-header">
+        <div class="icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1 class="register-title">Job Seeker Registration</h1>
+        <p class="register-subtitle">Create your profile and start applying for jobs</p>
+    </div>
+    
+    <div class="register-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+                <div class="form-text">We'll use this for your login</div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                        {{ form.password1 }}
+                        {{ form.password1.errors }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                        {{ form.password2 }}
+                        {{ form.password2.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.full_name.id_for_label }}">Full Name</label>
+                {{ form.full_name }}
+                {{ form.full_name.errors }}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.phone.id_for_label }}">Phone Number</label>
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.location.id_for_label }}">Location (Optional)</label>
+                        {{ form.location }}
+                        {{ form.location.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.skills.id_for_label }}">Skills</label>
+                {{ form.skills }}
+                {{ form.skills.errors }}
+                <div class="form-text">Enter skills separated by commas (e.g., Python, Django, JavaScript)</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.experience.id_for_label }}">Work Experience (Optional)</label>
+                {{ form.experience }}
+                {{ form.experience.errors }}
+                <div class="form-text">Describe your work experience</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.resume.id_for_label }}">Resume (Optional)</label>
+                {{ form.resume }}
+                {{ form.resume.errors }}
+                <div class="form-text">Upload your resume (PDF, DOC, DOCX)</div>
+            </div>
+            
+            <button type="submit" class="btn-submit">Create Job Seeker Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="{% url 'jobseeker_login' %}">Login here</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Seeker Login - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 20px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .login-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+    }
+    
+    .login-subtitle {
+        font-size: 1.0625rem;
+        color: #64748b;
+    }
+    
+    .login-card {
+        background: white;
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 20px 60px rgba(240, 147, 251, 0.15);
+        border: 1px solid rgba(240, 147, 251, 0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        letter-spacing: 0.3px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #1e293b;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #f5576c;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(245, 87, 108, 0.1);
+        outline: none;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(245, 87, 108, 0.3);
+        margin-top: 8px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 24px;
+        color: #64748b;
+    }
+    
+    .register-link a {
+        color: #f5576c;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .divider {
+        text-align: center;
+        margin: 24px 0;
+        position: relative;
+    }
+    
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e2e8f0;
+    }
+    
+    .divider span {
+        position: relative;
+        background: white;
+        padding: 0 16px;
+        color: #94a3b8;
+        font-size: 0.875rem;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .login-card {
+            padding: 32px 24px;
+        }
+        
+        .login-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <div class="icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1 class="login-title">Job Seeker Login</h1>
+        <p class="login-subtitle">Access your job seeker dashboard</p>
+    </div>
+    
+    <div class="login-card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="btn-submit">Login to Dashboard</button>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <div class="register-link">
+                Don't have an account? <a href="{% url 'jobseeker_register' %}">Register as Job Seeker</a>
+            </div>
+            
+            <div class="register-link" style="margin-top: 12px;">
+                <a href="{% url 'select_login' %}">← Back to login options</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

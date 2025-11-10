@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Dashboard - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-header {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 32px;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    
+    .company-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        background: var(--bg-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        font-weight: 700;
+    }
+    
+    .header-info h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    
+    .header-info p {
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .header-actions {
+        margin-left: auto;
+    }
+    
+    .btn-action {
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-primary-gradient {
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+    }
+    
+    .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        color: white;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 4px;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .jobs-list {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        animation: fadeInUp 0.8s ease 0.2s both;
+    }
+    
+    .job-item {
+        padding: 24px;
+        border: 2px solid #f1f5f9;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .job-item:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+        transform: translateX(4px);
+    }
+    
+    .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .job-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    
+    .job-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+    
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+    
+    .badge-active {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+    }
+    
+    .badge-inactive {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #991b1b;
+    }
+    
+    .job-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-view {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    
+    .btn-view:hover {
+        background: #e2e8f0;
+        color: #334155;
+    }
+    
+    .btn-edit {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+    }
+    
+    .btn-edit:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-applications {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        color: #92400e;
+    }
+    
+    .btn-applications:hover {
+        transform: translateY(-2px);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state svg {
+        width: 80px;
+        height: 80px;
+        opacity: 0.3;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+        font-size: 0.9375rem;
+        color: #94a3b8;
+        margin-bottom: 24px;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 24px;
+        }
+        
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .header-actions {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        .btn-action {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .job-header {
+            flex-direction: column;
+        }
+        
+        .job-actions {
+            width: 100%;
+        }
+        
+        .btn-sm {
+            flex: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="header-content">
+        <div class="company-logo">
+            {{ employer.company_name.0 }}
+        </div>
+        <div class="header-info">
+            <h1>{{ employer.company_name }}</h1>
+            <p>📍 {{ employer.location }} • 📞 {{ employer.phone }}</p>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'job_create' %}" class="btn-action btn-primary-gradient">+ Post New Job</a>
+        </div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="stat-value">{{ jobs.count }}</div>
+        <div class="stat-label">Posted Jobs</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12H15M9 16H15M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H12.586C12.8512 3.00006 13.1055 3.10545 13.293 3.293L18.707 8.707C18.8946 8.89449 18.9999 9.1488 19 9.414V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="stat-value">{{ total_applications }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="stat-value">{{ jobs|length }}</div>
+        <div class="stat-label">Active Listings</div>
+    </div>
+</div>
+
+<div class="jobs-list">
+    <div class="section-title">
+        <span>Your Job Postings</span>
+        <a href="{% url 'employer_profile' %}" class="btn-sm btn-view">Edit Profile</a>
+    </div>
+    
+    {% if jobs %}
+        {% for job in jobs %}
+        <div class="job-item">
+            <div class="job-header">
+                <div>
+                    <h3 class="job-title">{{ job.title }}</h3>
+                    <div class="job-meta">
+                        <span>📍 {{ job.location }}</span>
+                        <span>💼 {{ job.get_job_type_display }}</span>
+                        <span>📅 {{ job.posted_date|date:"M d, Y" }}</span>
+                        <span>📊 {{ job.application_count }} application{{ job.application_count|pluralize }}</span>
+                    </div>
+                </div>
+                <div>
+                    {% if job.is_active %}
+                    <span class="badge badge-active">Active</span>
+                    {% else %}
+                    <span class="badge badge-inactive">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="job-actions">
+                <a href="{% url 'job_detail' job.id %}" class="btn-sm btn-view">View Details</a>
+                <a href="{% url 'job_edit' job.id %}" class="btn-sm btn-edit">Edit Job</a>
+                <a href="{% url 'job_applications' job.id %}" class="btn-sm btn-applications">
+                    View Applications ({{ job.application_count }})
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>No jobs posted yet</h3>
+            <p>Start attracting talent by posting your first job</p>
+            <a href="{% url 'job_create' %}" class="btn btn-primary">Post Your First Job</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Registration - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-container {
+        max-width: 700px;
+        margin: 60px auto;
+        padding: 20px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .register-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: var(--bg-gradient);
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .register-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+    }
+    
+    .register-subtitle {
+        font-size: 1.0625rem;
+        color: #64748b;
+    }
+    
+    .register-card {
+        background: white;
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.15);
+        border: 1px solid rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        letter-spacing: 0.3px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #1e293b;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .form-text {
+        font-size: 0.8125rem;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: var(--bg-gradient);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+        margin-top: 8px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.4);
+    }
+    
+    .login-link {
+        text-align: center;
+        margin-top: 24px;
+        color: #64748b;
+    }
+    
+    .login-link a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0 0;
+    }
+    
+    .errorlist li {
+        color: #dc2626;
+        font-size: 0.875rem;
+        padding: 8px 12px;
+        background: #fee2e2;
+        border-radius: 8px;
+        margin-top: 4px;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .register-card {
+            padding: 32px 24px;
+        }
+        
+        .register-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-header">
+        <div class="icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 21V5C19 4.46957 18.7893 3.96086 18.4142 3.58579C18.0391 3.21071 17.5304 3 17 3H7C6.46957 3 5.96086 3.21071 5.58579 3.58579C5.21071 3.96086 5 4.46957 5 5V21M3 21H21M9 7H10M9 11H10M14 7H15M14 11H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1 class="register-title">Employer Registration</h1>
+        <p class="register-subtitle">Create your company account and start hiring</p>
+    </div>
+    
+    <div class="register-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+                <div class="form-text">We'll use this for your login</div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                        {{ form.password1 }}
+                        {{ form.password1.errors }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                        {{ form.password2 }}
+                        {{ form.password2.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.company_name.id_for_label }}">Company Name</label>
+                {{ form.company_name }}
+                {{ form.company_name.errors }}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.company_description.id_for_label }}">Company Description</label>
+                {{ form.company_description }}
+                {{ form.company_description.errors }}
+                <div class="form-text">Tell job seekers about your company</div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.website.id_for_label }}">Website (Optional)</label>
+                        {{ form.website }}
+                        {{ form.website.errors }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.phone.id_for_label }}">Phone Number</label>
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="{{ form.location.id_for_label }}">Location</label>
+                {{ form.location }}
+                {{ form.location.errors }}
+            </div>
+            
+            <button type="submit" class="btn-submit">Create Employer Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="{% url 'employer_login' %}">Login here</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

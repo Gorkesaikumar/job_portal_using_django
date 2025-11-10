@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Jobs - Job Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .browse-header {
+        text-align: center;
+        padding: 60px 20px 40px;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .browse-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+    }
+    
+    .browse-subtitle {
+        font-size: 1.0625rem;
+        color: #64748b;
+    }
+    
+    .filter-section {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 32px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        align-items: end;
+    }
+    
+    .form-group {
+        margin: 0;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 0.9375rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+    
+    .btn-filter {
+        padding: 12px 28px;
+        font-weight: 600;
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    }
+    
+    .jobs-grid {
+        display: grid;
+        gap: 20px;
+        animation: fadeInUp 0.8s ease 0.2s both;
+    }
+    
+    .job-card {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        border-color: var(--primary);
+    }
+    
+    .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+        gap: 16px;
+    }
+    
+    .company-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: var(--bg-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    
+    .job-info {
+        flex: 1;
+    }
+    
+    .job-title {
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    
+    .company-name {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+    
+    .job-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 16px;
+    }
+    
+    .job-description {
+        color: #475569;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .job-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 2px solid #f1f5f9;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .salary {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #10b981;
+    }
+    
+    .btn-view {
+        padding: 10px 24px;
+        font-weight: 600;
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+        color: white;
+    }
+    
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .badge-full-time {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+    }
+    
+    .badge-part-time {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+    }
+    
+    .badge-contract {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        color: #92400e;
+    }
+    
+    .badge-internship {
+        background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+        color: #9f1239;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+    
+    .empty-state svg {
+        width: 100px;
+        height: 100px;
+        opacity: 0.3;
+        margin-bottom: 24px;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 12px;
+    }
+    
+    .empty-state p {
+        font-size: 1rem;
+        color: #94a3b8;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .browse-title {
+            font-size: 2rem;
+        }
+        
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+        
+        .job-header {
+            flex-direction: column;
+        }
+        
+        .job-footer {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .btn-view {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="browse-header">
+    <h1 class="browse-title">Browse Job Opportunities</h1>
+    <p class="browse-subtitle">Discover your next career move from {{ jobs.count }} available positions</p>
+</div>
+
+<div class="filter-section">
+    <form method="get" class="filter-form">
+        <div class="form-group">
+            <label class="form-label" for="search">Search</label>
+            <input type="text" class="form-control" id="search" name="q" value="{{ query }}" placeholder="Job title or keyword...">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="job_type">Job Type</label>
+            <select class="form-select" id="job_type" name="job_type">
+                <option value="">All Types</option>
+                <option value="full_time" {% if job_type == 'full_time' %}selected{% endif %}>Full Time</option>
+                <option value="part_time" {% if job_type == 'part_time' %}selected{% endif %}>Part Time</option>
+                <option value="contract" {% if job_type == 'contract' %}selected{% endif %}>Contract</option>
+                <option value="internship" {% if job_type == 'internship' %}selected{% endif %}>Internship</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="location">Location</label>
+            <input type="text" class="form-control" id="location" name="location" value="{{ location }}" placeholder="City or state...">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn-filter">Apply Filters</button>
+        </div>
+    </form>
+</div>
+
+<div class="jobs-grid">
+    {% if jobs %}
+        {% for job in jobs %}
+        <div class="job-card">
+            <div class="job-header">
+                <div class="company-logo">
+                    {{ job.employer.company_name.0 }}
+                </div>
+                <div class="job-info">
+                    <h2 class="job-title">{{ job.title }}</h2>
+                    <div class="company-name">{{ job.employer.company_name }}</div>
+                    <div class="job-meta">
+                        <span>📍 {{ job.location }}</span>
+                        <span>📅 Posted {{ job.posted_date|timesince }} ago</span>
+                        <span class="badge badge-{{ job.job_type }}">{{ job.get_job_type_display }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="job-description">{{ job.description|truncatewords:30 }}</p>
+            
+            <div class="job-footer">
+                <div>
+                    {% if job.salary_min %}
+                    <div class="salary">${{ job.salary_min|floatformat:0 }} - ${{ job.salary_max|floatformat:0 }}</div>
+                    {% else %}
+                    <div class="salary">Competitive Salary</div>
+                    {% endif %}
+                </div>
+                <a href="{% url 'job_detail' job.id %}" class="btn-view">View Details →</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>No jobs found</h3>
+            <p>Try adjusting your filters or search criteria</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
